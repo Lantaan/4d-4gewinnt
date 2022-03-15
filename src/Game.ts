@@ -1,2 +1,6 @@
 import React from "react";
-class Game{}
+class Game{
+    board: number[][][][]=[[[[]]]];
+    constructor(){
+    }
+}
