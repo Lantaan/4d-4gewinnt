@@ -1,6 +1,6 @@
 import React from "react";
 class Game{
-    board: number[][][][]=[[[[]]]];
+    board: number[][][][]=[[[[ ]]]];
     constructor(){
     }
 }
