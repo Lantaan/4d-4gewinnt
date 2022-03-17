@@ -66,6 +66,8 @@ class Tutorial {
         if (this.nullOderObjekt) this.nullOderObjekt.beispielAttribut = 200;
         if (this.undefinedOderObjekt) this.undefinedOderObjekt.beispielAttribut = 7;
 
+        //0===false -> false
+        //0==false -> true
 
         //feldern können normal mit Zahlen indexiert werden
         //Länge eines Feldes ist der letzte belegte Index + 1
@@ -94,6 +96,7 @@ class Tutorial {
                 }
             }
         }
+        this.addieren(1, 2);
     }
 
     //methodenName(argument1: argumenttyp1, argument2: argumenttyp2): methodenReturn{...}
