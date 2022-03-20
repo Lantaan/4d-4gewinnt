@@ -7,11 +7,11 @@ import Tile from './Tile';
 
 function App() {
   return (
-        <Canvas>
+    <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <Tile meshProps={{position: [-1.2, 0, 0]}} filledBy={null}/>
-      <Tile meshProps={{position: [1.2, 0, 0]}} filledBy={"a"}/>
+      <Tile meshProps={{ position: [-1.2, 0, 0] }} filledBy={null} />
+      <Tile meshProps={{ position: [1.2, 0, 0] }} filledBy={"a"} />
     </Canvas>
   );
 }
