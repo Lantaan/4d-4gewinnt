@@ -84,12 +84,22 @@ class Tutorial {
 
 
         //mehrdimensionales Feld mit diskreten Werten
-        for (let i = 0; i < 10; i++) {
+        /*for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
                 for (let k = 0; k < 10; k++) {
                     //man muss zuerst die Felder im Feld instanziieren
                     this.superFeld[i] = [];
                     this.superFeld[i][j] = [];
+                    this.superFeld[i][j][k] = "a";
+                }
+            }
+        }*/
+        for (let i = 0; i < 10; i++) {
+            this.superFeld[i] = [];
+            for (let j = 0; j < 10; j++) {
+                this.superFeld[i][j] = [];
+                for (let k = 0; k < 10; k++) {
+                    //man muss zuerst die Felder im Feld instanziieren
                     this.superFeld[i][j][k] = "a";
                 }
             }
