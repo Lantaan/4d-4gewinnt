@@ -1,7 +1,7 @@
 import React from "react";
 import Tutorial from "./Tutorial";
 class Game{
-    board: number[][][][]=[[[[]]]];
+    board: number[][][][]=[[[[ ]]]];
     constructor(){
         let yay: Tutorial = new Tutorial()
         for (let a: number =0; a<4; a++) {
