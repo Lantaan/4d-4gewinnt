@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { BoxHelper, Color, Mesh, Vector3 } from "three"
+import { Color, Mesh, Vector3 } from "three"
 
 function Tile(props: {
     pos: Vector3,
@@ -14,17 +14,7 @@ function Tile(props: {
     else if (!props.filledBy) color = new Color(0x000000);
 
     return (<>
-        <boxHelper args={[]} />
-        <mesh
-            position={props.pos}
-            ref={ref}
-            onClick={(event) => 0}
-            onPointerOver={(event) => hover(true)}
-            onPointerOut={(event) => hover(false)}>
-            <boxGeometry args={[1, 1, 1]} />
-            <meshStandardMaterial color={color}
-                transparent={!props.filledBy} />
-        </mesh>
+        
     </>)
 }
 
