@@ -10,8 +10,8 @@ function App() {
     <Canvas>
       <ambientLight />
       <pointLight position={[10, 10, 10]} />
-      <Tile pos={new Vector3(-1.2, 0, 0)} filledBy={null} />
-      <Tile pos={new Vector3(1.2, 0, 0)} filledBy={"a"} />
+      <Tile pos={new Vector3(-1.2, 0, 0)} filledBy={"no marker"} />
+      <Tile pos={new Vector3(1.2, 0, 0)} filledBy={"player1"} />
     </Canvas>
   );
 }

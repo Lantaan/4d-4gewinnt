@@ -58,7 +58,7 @@ function andereFunktionOderMethodeAusführen(
 }
 
 let aaa = 0;
-function leereFunktion(){
+function leereFunktion() {
     aaa = 3;
 }
 andereFunktionOderMethodeAusführen(leereFunktion);
