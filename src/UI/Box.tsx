@@ -12,7 +12,7 @@ function Box(props: {
 
     const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null),
         [edges, setEdges] = useState<Vector3[] | null>(null);
-
+    console.log(performance.now())
     useEffect(() => {
         if (!outline && gometryRef.current) {
             const verticesCoordinates: number[] = Array.from(gometryRef.current.attributes.position.array),
@@ -57,15 +57,14 @@ function Box(props: {
     return <>
         <mesh position={props.pos}>
             <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} ref={gometryRef} />
-            <meshStandardMaterial color={props.color}
-                transparent={props.transparent} wireframe={props.outline} />
+            <meshStandardMaterial color={props.color} transparent={props.transparent} />
         </mesh>
 
-        {outline?.map(startEnd =>
-            <StraightLine start={startEnd.start} end={startEnd.end} color={outlineColor} radius={outlineRadius} />
+        {outline?.map((startEnd, i) =>
+            <StraightLine start={startEnd.start} end={startEnd.end} color={outlineColor} radius={outlineRadius} key={i} />
         )}
-        {edges?.map(edge =>
-            <mesh position={edge}>
+        {edges?.map((edge, i) =>
+            <mesh position={edge} key={i}>
                 <sphereGeometry args={[outlineRadius]} />
                 <meshStandardMaterial color={outlineColor} />
             </mesh>

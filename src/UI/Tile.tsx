@@ -17,7 +17,7 @@ function Tile(props: {
     else if (!props.filledBy) color = new Color(0x000000);
 
     return (<>
-        <Box pos={props.pos} color={color} transparent={filled}/>
+        <Box pos={props.pos} color={color} transparent={filled} />
     </>)
 }
 

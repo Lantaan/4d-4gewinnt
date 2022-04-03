@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
-import { BufferGeometry, Color, Curve, Vector3 } from "three";
+import React, { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import { BufferGeometry, Color, Curve, TubeGeometry, Vector3 } from "three";
 
 
 class LineCurve extends Curve<Vector3>{
@@ -23,7 +23,7 @@ function StraightLine(props: { start: Vector3, end: Vector3, color?: Color, radi
     const curve = new LineCurve(props.start, props.end);
 
     return <mesh>
-        <tubeGeometry args={[curve, 64, radius, 32]} />
+        <tubeGeometry args={[curve, 1, radius]} />
         <meshStandardMaterial color={color} />
     </mesh>
 }
