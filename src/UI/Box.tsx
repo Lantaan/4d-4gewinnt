@@ -9,7 +9,10 @@ function Box(props: {
 }) {
 
     const gometryRef = useRef<BoxGeometry>();
-    const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null);
+
+    const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null),
+        [edges, setEdges] = useState<Vector3[] | null>(null);
+
     useEffect(() => {
         if (!outline && gometryRef.current) {
             const verticesCoordinates: number[] = Array.from(gometryRef.current.attributes.position.array),
@@ -22,16 +25,22 @@ function Box(props: {
                     )) : undefined
             );
 
+            const worldVertices: Vector3[] = vertices.map(vertex => vertex.clone().add(props.pos));
+            setEdges(worldVertices);
+
 
             const linesBetweenVerticesEnds: { start: Vector3, end: Vector3 }[] = [];
 
-            vertices.forEach((vertex, i) => {
-                const start = vertices[i],
-                    end = vertices[i + 1];
+            worldVertices.forEach((start, i) => {
+                const uncheckedVertices = worldVertices.slice(i, -1);
 
-                //not a diagonal connection if 2 coordinates are identical
-                let identicalCoordinates = start.x === end.x + start.y === end.y
-                if(start.distanceTo(end) <= scale) linesBetweenVerticesEnds.push({ start, end })
+                uncheckedVertices.forEach((end) => {
+                    if (end) {
+                        //not a diagonal connection if 2 coordinates are identical
+                        let identicalCoordinates = Number(start.x === end.x) + Number(start.y === end.y) + Number(start.z === end.z);
+                        if (identicalCoordinates >= 2) linesBetweenVerticesEnds.push({ start, end });
+                    }
+                })
             });
 
 
@@ -40,7 +49,9 @@ function Box(props: {
     })
 
 
-    const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale;
+    const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
+        outlineColor = new Color(0x000fff),
+        outlineRadius = .05;
 
 
     return <>
@@ -50,7 +61,15 @@ function Box(props: {
                 transparent={props.transparent} wireframe={props.outline} />
         </mesh>
 
-        {outline?.map(startEnd => <StraightLine start={startEnd.start} end={startEnd.end} />)}
+        {outline?.map(startEnd =>
+            <StraightLine start={startEnd.start} end={startEnd.end} color={outlineColor} radius={outlineRadius} />
+        )}
+        {edges?.map(edge =>
+            <mesh position={edge}>
+                <sphereGeometry args={[outlineRadius]} />
+                <meshStandardMaterial color={outlineColor} />
+            </mesh>
+        )}
     </>
 
 }
