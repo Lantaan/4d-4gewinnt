@@ -5,14 +5,14 @@ import StraightLine from "./Line";
 
 function Box(props: {
     pos: Vector3, color: Color, scale?: Vector3,
-    outline?: boolean, transparent?: boolean
+    outline?: boolean, transparent?: boolean,
+    onMouseDown?: () => void, onMouseEnter?: () => void, onMouseLeave?: () => void
 }) {
-
     const gometryRef = useRef<BoxGeometry>();
 
     const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null),
         [edges, setEdges] = useState<Vector3[] | null>(null);
-    console.log(performance.now())
+
     useEffect(() => {
         if (!outline && gometryRef.current) {
             const verticesCoordinates: number[] = Array.from(gometryRef.current.attributes.position.array),
@@ -51,13 +51,14 @@ function Box(props: {
 
     const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
         outlineColor = new Color(0x000fff),
-        outlineRadius = .05;
+        outlineRadius = .025;
 
 
     return <>
-        <mesh position={props.pos}>
+        <mesh position={props.pos}
+        onPointerEnter={props.onMouseEnter} onPointerLeave={props.onMouseLeave} onPointerDown={props.onMouseDown}>
             <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} ref={gometryRef} />
-            <meshStandardMaterial color={props.color} transparent={props.transparent} />
+            <meshStandardMaterial color={props.color} transparent={props.transparent} opacity={props.transparent?0:1}/>
         </mesh>
 
         {outline?.map((startEnd, i) =>
