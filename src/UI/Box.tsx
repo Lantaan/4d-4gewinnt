@@ -56,9 +56,9 @@ function Box(props: {
 
     return <>
         <mesh position={props.pos}
-        onPointerEnter={props.onMouseEnter} onPointerLeave={props.onMouseLeave} onPointerDown={props.onMouseDown}>
+            onPointerEnter={props.onMouseEnter} onPointerLeave={props.onMouseLeave} onPointerDown={props.onMouseDown}>
             <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} ref={gometryRef} />
-            <meshStandardMaterial color={props.color} transparent={props.transparent} opacity={props.transparent?0:1}/>
+            <meshStandardMaterial color={props.color} transparent={props.transparent} opacity={props.transparent ? 0 : 1} />
         </mesh>
 
         {outline?.map((startEnd, i) =>
