@@ -7,9 +7,9 @@ function Tile(props: {
     filledBy: "no marker" | "player1" | "player2"
 }) {
     const ref = useRef<Mesh>(null!);
-    const [hovered, hover] = useState(false);
+    const [hover, setHover] = useState(false);
 
-    const filled = props.filledBy !== "no marker";
+    const filled = props.filledBy !== "no marker" || hover;
 
     let color: Color = new Color(0x000000);
     if (props.filledBy === "player1") color = new Color(0xff0000);
@@ -17,7 +17,8 @@ function Tile(props: {
     else if (!props.filledBy) color = new Color(0x000000);
 
     return (<>
-        <Box pos={props.pos} color={color} outline={filled} transparent={filled}/>
+        <Box pos={props.pos} color={color} transparent={!filled}
+        onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}/>
     </>)
 }
 

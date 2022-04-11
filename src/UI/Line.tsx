@@ -1,16 +1,17 @@
-import { Color, Curve, Vector3 } from "three";
+import { ReactElement, useEffect, useLayoutEffect, useRef } from "react";
+import { Color, Curve, TubeGeometry, Vector3 } from "three";
+
+
+const lines: { geometry: ReactElement<TubeGeometry>, dist: Vector3 }[] = [];
 
 
 class LineCurve extends Curve<Vector3>{
-    dirVector: Vector3;
-
-    constructor(private start: Vector3, private end: Vector3) {
+    constructor(private target: Vector3) {
         super();
-        this.dirVector = end.clone().sub(start);
     }
 
     getPoint(t: number, optionalTarget = new Vector3()) {
-        const point = this.dirVector.clone().multiplyScalar(t).add(this.start);
+        const point = this.target.clone().multiplyScalar(t).add(new Vector3());
         return optionalTarget.set(point.x, point.y, point.z);
     }
 }
@@ -19,10 +20,18 @@ class LineCurve extends Curve<Vector3>{
 function StraightLine(props: { start: Vector3, end: Vector3, color?: Color, radius?: number }) {
     const color = props.color ? props.color : new Color(0x000000),
         radius = props.radius !== undefined ? props.radius : 0.1;
-    const curve = new LineCurve(props.start, props.end);
+    const dist = props.end.clone().sub(props.start);
 
-    return <mesh>
-        <tubeGeometry args={[curve, 64, radius]} />
+    const line = lines.find(line => line.dist.equals(dist));
+    let geometry: ReactElement<TubeGeometry> | undefined = line?.geometry;
+    if (!geometry) {
+        const curve = new LineCurve(dist),
+            geometry = <tubeGeometry args={[curve, 1, radius]} />
+        lines.push({ geometry, dist });
+    }
+
+    return <mesh position={props.start}>
+        {geometry}
         <meshStandardMaterial color={color} />
     </mesh>
 }

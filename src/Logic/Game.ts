@@ -1,10 +1,15 @@
 import React from "react";
+<<<<<<< HEAD
 import { Vector4 } from "three";
 class Game{
+=======
+class Game {
+>>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
     activeplayer: ("player1" | "player2") = "player1";
-    board: ("no marker"|"player1" |"player2") [][][][]=[[[[]]]];
-    constructor(){
+    board: ("no marker" | "player1" | "player2")[][][][] = [[[[]]]];
+    constructor() {
         //am Anfang sind alle Felder leer
+<<<<<<< HEAD
         for (let a: number =0; a<4; a++) {
             this.board[a]=[];
             for (let b: number =0; b<4; b++) {
@@ -13,19 +18,37 @@ class Game{
                     this.board[a][b][c]=[];
                     for (let d: number =0; d<4; d++) {
                         this.board[a][b][c][d]="no marker";
+=======
+        for (let a: number = 0; a < 4; a++) {
+            for (let b: number = 0; b < 4; b++) {
+                for (let c: number = 0; c < 4; c++) {
+                    for (let d: number = 0; d < 4; d++) {
+                        this.board[a] = [];
+                        this.board[a][b] = [];
+                        this.board[a][b][c] = [];
+                        this.board[a][b][c][d] = "no marker";
+>>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
                     }
                 }
             }
         }
     }
+<<<<<<< HEAD
     turn(pos: Vector4): string{
         if(this.board[pos.x][pos.y][pos.z][pos.w]!= "no marker"){return "this square is already full, please select an empty square"}
         this.board[pos.x][pos.y][pos.z][pos.w]=this.activeplayer;
         if(this.checkcompleterow()){return "congratulations " + this.activeplayer + ", you won!"}
         if(this.activeplayer=="player1"){this.activeplayer="player2"}else{this.activeplayer="player1"}
+=======
+    turn(x: number, y: number, z: number, w: number): string {
+        if (this.board[x][y][z][w] != "no marker") { return "Das Feld ist schon voll" }
+        this.board[x][y][z][w] = this.activeplayer;
+        if (this.activeplayer = "player1") { this.activeplayer = "player2" } else { this.activeplayer = "player1" }
+        if (this.checkcompleterow() == true) { return "congratulations " + this.activeplayer + " won" }
+>>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
         return this.activeplayer + ", it's your turn!";
     }
-    checkcompleterow():boolean{
+    checkcompleterow(): boolean {
         return false;
     }
     raycast(origin:Vector4, target:Vector4):string[]{
