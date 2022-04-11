@@ -46,7 +46,7 @@ class Game{
                 stepY = Math.sign(dist.y),
                 stepZ = Math.sign(dist.z),
                 stepW = Math.sign(dist.w);
-
+/*
             //current index of pixel that the line goes through
             let indexX = (this.constants.originFlooredX as number),
                 indexY = (this.constants.originFlooredY as number),
@@ -148,6 +148,11 @@ class Game{
             }
 
             return currentIndex;
-        },}
-}
+        }
+            */
+        
+        return [""]
+        }
+    }
+        
 export default Game
