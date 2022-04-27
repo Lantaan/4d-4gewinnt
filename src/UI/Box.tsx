@@ -1,6 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BoxGeometry, Color, Mesh, Vector3 } from "three";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
+import { BoxGeometry, Color, Mesh, SphereGeometry, Vector3 } from "three";
 import StraightLine from "./Line";
+import { addMouseDown, addPointerEnter, addPointerLeave } from "./Raycaster";
+
+
+const spheres: { geometry: ReactElement<SphereGeometry>, radius: number }[] = [],
+    boxes: { geometry: ReactElement<BoxGeometry>, scale: Vector3 }[] = [];
 
 
 function Box(props: {
@@ -8,14 +13,15 @@ function Box(props: {
     outline?: boolean, transparent?: boolean,
     onMouseDown?: () => void, onMouseEnter?: () => void, onMouseLeave?: () => void
 }) {
-    const gometryRef = useRef<BoxGeometry>();
+    const meshRef = useRef<Mesh>();
 
     const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null),
         [edges, setEdges] = useState<Vector3[] | null>(null);
 
     useEffect(() => {
-        if (!outline && gometryRef.current) {
-            const verticesCoordinates: number[] = Array.from(gometryRef.current.attributes.position.array),
+        if (!outline && meshRef.current) {
+            const geometry = meshRef.current.geometry;
+            const verticesCoordinates: number[] = Array.from(geometry.attributes.position.array),
                 vertices: Vector3[] = [];
 
             verticesCoordinates.forEach((vertex, i) =>
@@ -54,10 +60,34 @@ function Box(props: {
         outlineRadius = .025;
 
 
+    useEffect(() => {
+        const mesh = meshRef.current;
+
+        if (mesh) {
+            if (props.onMouseEnter) addPointerEnter(mesh.id, props.onMouseEnter);
+            if (props.onMouseLeave) addPointerLeave(mesh.id, props.onMouseLeave);
+            if (props.onMouseDown) addMouseDown(mesh.id, props.onMouseDown);
+        }
+        console.log(mesh?.id)
+    }, [])
+
+    const sphere = spheres.find(sphere => sphere.radius === outlineRadius)
+    let sphereGeometry: ReactElement<SphereGeometry> | undefined = sphere?.geometry;
+    if (!sphereGeometry) {
+        sphereGeometry = <sphereGeometry args={[outlineRadius]} />
+        spheres.push({ geometry: sphereGeometry, radius: outlineRadius });
+    }
+
+    const box = boxes.find(box => box.scale.equals(scale));
+    let boxGeometry: ReactElement<BoxGeometry> | undefined = box?.geometry;
+    if (!boxGeometry) {
+        boxGeometry = <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} />
+        boxes.push({ geometry: boxGeometry, scale });
+    }
+
     return <>
-        <mesh position={props.pos}
-            onPointerEnter={props.onMouseEnter} onPointerLeave={props.onMouseLeave} onPointerDown={props.onMouseDown}>
-            <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} ref={gometryRef} />
+        <mesh position={props.pos} ref={meshRef}>
+            {boxGeometry}
             <meshStandardMaterial color={props.color} transparent={props.transparent} opacity={props.transparent ? 0 : 1} />
         </mesh>
 
@@ -66,7 +96,7 @@ function Box(props: {
         )}
         {edges?.map((edge, i) =>
             <mesh position={edge} key={i}>
-                <sphereGeometry args={[outlineRadius]} />
+                {sphereGeometry}
                 <meshStandardMaterial color={outlineColor} />
             </mesh>
         )}

@@ -1,24 +1,31 @@
 import { useEffect, useRef, useState } from "react"
-import { Color, Mesh, Vector3 } from "three"
+import { Color, Mesh, Vector3, Vector4 } from "three"
+import Game from "../Logic/Game";
 import Box from "./Box";
 
 function Tile(props: {
-    pos: Vector3,
+    displayPos: Vector3, gamePos: Vector4, gameObject: Game,
     filledBy: "no marker" | "player1" | "player2"
 }) {
-    const ref = useRef<Mesh>(null!);
-    const [hover, setHover] = useState(false);
+    const [hover, setHover] = useState(false),
+        [filledBy, setFilledBy] = useState<"no marker" | "player1" | "player2">(props.filledBy);
 
-    const filled = props.filledBy !== "no marker" || hover;
+    const transparent = filledBy === "no marker" && !hover;
 
     let color: Color = new Color(0x000000);
-    if (props.filledBy === "player1") color = new Color(0xff0000);
-    else if (props.filledBy === "player2") color = new Color(0x00ff00);
-    else if (!props.filledBy) color = new Color(0x000000);
+    if (filledBy === "player1") color = new Color(0xff0000);
+    else if (filledBy === "player2") color = new Color(0x00ff00);
+    else if (!filledBy) color = new Color(0x000000);
 
     return (<>
-        <Box pos={props.pos} color={color} transparent={!filled}
-        onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}/>
+        <Box pos={props.displayPos} color={color} transparent={transparent}
+            onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+            onMouseDown={() => {
+                const gamePos = props.gamePos,
+                    turnMessage = props.gameObject.turn(props.gamePos)
+                alert(turnMessage);
+                setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
+            }} />
     </>)
 }
 
