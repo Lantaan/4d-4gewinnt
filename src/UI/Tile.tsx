@@ -23,7 +23,7 @@ function Tile(props: {
             onMouseDown={() => {
                 const gamePos = props.gamePos,
                     turnMessage = props.gameObject.turn(props.gamePos)
-                alert(turnMessage);
+                //alert(turnMessage);
                 setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
             }} />
     </>)

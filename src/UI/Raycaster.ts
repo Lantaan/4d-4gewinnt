@@ -22,7 +22,7 @@ window.addEventListener("mousedown", onMouseDown);
 function onMouseDown(e: MouseEvent) {
   if (previousObjectId !== null) {
     const clickCallback = onClickFunctions.get(previousObjectId);
-    if(clickCallback) clickCallback(e);
+    if (clickCallback) clickCallback(e);
   }
 }
 
@@ -31,30 +31,39 @@ function frame(camera: Camera, scene: Scene) {
   raycaster.setFromCamera(pointer, camera);
   const intersects = raycaster.intersectObjects(scene.children);
 
-  if (intersects[0]) {
-    const intersect = intersects[0],
-      object = intersect.object,
-      id = object.id;
+  intersects.some(intersect => {
+    if (intersect) {
+      const object = intersect.object,
+        id = object.id;
 
-    if (id !== previousObjectId) {
+      let callbackForObjectExists: boolean = false;
+
+      if (id !== previousObjectId) {
+        if (previousObjectId !== null) {
+          const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
+          if (leaveCallback) leaveCallback();
+        }
+
+        const enterCallback = onPointerEnterFunctions.get(id);
+        if (enterCallback) {
+          callbackForObjectExists = true;
+          enterCallback();
+        }
+        previousObjectId = id;
+      }
+
+      if(callbackForObjectExists)return true;
+      
+    } else {
       if (previousObjectId !== null) {
         const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
         if (leaveCallback) leaveCallback();
       }
-
-      const enterCallback = onPointerEnterFunctions.get(id);
-      if (enterCallback) enterCallback();
-      previousObjectId = id;
+      previousObjectId = null;
     }
-
-  } else {
-    if (previousObjectId !== null) {
-      const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
-      if (leaveCallback) leaveCallback();
-    }
-    previousObjectId = null;
-  }
+  });
 }
+
 
 
 function useMouseRaycaster() {
