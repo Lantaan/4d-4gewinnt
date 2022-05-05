@@ -5,7 +5,6 @@ import { Box3Helper, BoxGeometry, BoxHelper, BufferGeometry, Color, Mesh, Sphere
 import { Line2 } from "three/examples/jsm/lines/Line2";
 import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
 import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
-import StraightLine from "./Line";
 import { addMouseDown, addPointerEnter, addPointerLeave } from "./Raycaster";
 
 
@@ -20,7 +19,7 @@ function Box(props: {
 }) {
     const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
         outlineColor = new Color(0x000fff),
-        outlineRadius = 0.005;
+        outlineRadius = 0.002;
 
     const meshRef = useRef<Mesh>();
 
@@ -30,7 +29,6 @@ function Box(props: {
         const boxHelper = boxHelperRef.current as BoxHelper;
         if (boxHelper) {
             outlineGeometry = boxHelper.geometry;
-            console.log(boxHelper.geometry)
         }
     }, []);
 

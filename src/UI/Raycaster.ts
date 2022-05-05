@@ -10,15 +10,16 @@ const onPointerEnterFunctions = new Map<number, () => void>(),
 
 let previousObjectId: number | null = null;
 
+const listenerElement = document.getElementById("root")!;
 
-window.addEventListener("pointermove", onPointerMove);
+listenerElement.addEventListener("pointermove", onPointerMove);
 function onPointerMove(e: PointerEvent) {
   //https://threejs.org/docs/#api/en/core/Raycaster
   pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 }
 
-window.addEventListener("mousedown", onMouseDown);
+listenerElement.addEventListener("mousedown", onMouseDown);
 function onMouseDown(e: MouseEvent) {
   if (previousObjectId !== null) {
     const clickCallback = onClickFunctions.get(previousObjectId);

@@ -9,6 +9,7 @@ import Game from '../Logic/Game';
 import Tower from './Tower';
 import Box from './Box';
 import { OrbitControls } from '@react-three/drei';
+import { PopupComponent } from './Popup';
 
 
 const gameObject = new Game();
@@ -29,6 +30,7 @@ function App() {
         />}
       </Canvas>
     </div>
+    <PopupComponent />
     </>);
 }
 
