@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.popup-container {
+.popup-bg {
   position: fixed;
   top: 0;
   left: 0;
@@ -20,4 +20,13 @@ code {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
+}
+.popup-container{
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  border-radius: 10px;
+  z-index: 10000;
 }
