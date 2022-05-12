@@ -1,15 +1,13 @@
 import React from "react";
-<<<<<<< HEAD
+
 import { Vector4 } from "three";
-class Game{
-=======
+
 class Game {
->>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
     activeplayer: ("player1" | "player2") = "player1";
     board: ("no marker" | "player1" | "player2")[][][][] = [[[[]]]];
     constructor() {
         //am Anfang sind alle Felder leer
-<<<<<<< HEAD
+
         for (let a: number =0; a<4; a++) {
             this.board[a]=[];
             for (let b: number =0; b<4; b++) {
@@ -18,39 +16,36 @@ class Game {
                     this.board[a][b][c]=[];
                     for (let d: number =0; d<4; d++) {
                         this.board[a][b][c][d]="no marker";
-=======
-        for (let a: number = 0; a < 4; a++) {
-            for (let b: number = 0; b < 4; b++) {
-                for (let c: number = 0; c < 4; c++) {
-                    for (let d: number = 0; d < 4; d++) {
-                        this.board[a] = [];
-                        this.board[a][b] = [];
-                        this.board[a][b][c] = [];
-                        this.board[a][b][c][d] = "no marker";
->>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
                     }
                 }
             }
         }
     }
-<<<<<<< HEAD
-    turn(pos: Vector4): string{
-        if(this.board[pos.x][pos.y][pos.z][pos.w]!= "no marker"){return "this square is already full, please select an empty square"}
+
+    turn(pos: Vector4): {winner: ("player1"|"player2"|null); turn: ("player1"|"player2"|null)}{
+        if(this.board[pos.x][pos.y][pos.z][pos.w]!= "no marker"){
+            return {winner: null, turn: null}
+        }
         this.board[pos.x][pos.y][pos.z][pos.w]=this.activeplayer;
-        if(this.checkcompleterow()){return "congratulations " + this.activeplayer + ", you won!"}
+        if(this.checkcompleterow()){return {winner: this.activeplayer, turn: null}}
         if(this.activeplayer=="player1"){this.activeplayer="player2"}else{this.activeplayer="player1"}
-=======
-    turn(x: number, y: number, z: number, w: number): string {
-        if (this.board[x][y][z][w] != "no marker") { return "Das Feld ist schon voll" }
-        this.board[x][y][z][w] = this.activeplayer;
-        if (this.activeplayer = "player1") { this.activeplayer = "player2" } else { this.activeplayer = "player1" }
-        if (this.checkcompleterow() == true) { return "congratulations " + this.activeplayer + " won" }
->>>>>>> b63010fde8de9ca4ec8749fee402a8262dc94716
-        return this.activeplayer + ", it's your turn!";
+        return {winner: null,turn: this.activeplayer}
     }
+
     checkcompleterow(): boolean {
         return false;
     }
+    checkrow(pos: Vector4, direction: Vector4): string[]{
+        let contents: string[] = [];
+        while (pos.x<4 && pos.y<4 && pos.z<4 && pos.w<4){
+        pos = pos.add(direction);
+     }
+        while (pos.x>-1 && pos.y>-1 && pos.z>-1 && pos.w>-1){
+            
+        }
+        return contents;
+    } 
+    /*
     raycast(origin:Vector4, target:Vector4):string[]{
             const dist = target.addVectors(target, origin)
                 //Wurzel
@@ -69,11 +64,11 @@ class Game {
                 stepY = Math.sign(dist.y),
                 stepZ = Math.sign(dist.z),
                 stepW = Math.sign(dist.w);
-/*
             //current index of pixel that the line goes through
-            let indexX = (this.constants.originFlooredX as number),
-                indexY = (this.constants.originFlooredY as number),
-                indexZ = (this.constants.originFlooredZ as number);
+            let indexX = (Math.floor(origin.x)),
+                indexY = (Math.floor(origin.y)),
+                indexZ = (Math.floor(origin.z)),
+                indexW = (Math.floor(origin.w));
 
 
             //signs have to be irrelevant
@@ -90,10 +85,9 @@ class Game {
 
             //~ aktiver Knoten
             //statt Index als zahl, index als Vektor
-            let currentIndex: number = (this.constants.originIndex as number);
-
-
-            while (currentIndex > -1) {
+            let content: string = (this.board[indexX][indexY][indexZ][indexW]);
+            let contents: string[] = [];
+            while (content != "no marker" && content != undefined) {
                 //kleinste Zahl aus 3 Zahlen
                 const minCoordinate = Math.min(Math.min(tMaxX, tMaxY), tMaxZ);
 
@@ -101,57 +95,44 @@ class Game {
                     if (tMaxX === tMaxY && tMaxX === tMaxZ) {
                         tMaxX += tDeltaX; tMaxY += tDeltaY; tMaxZ += tDeltaZ;
                         indexX += stepX; indexY += stepY; indexZ += stepZ;
-                        //das if ist unnötig, nur das else braucht man
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
-                        else {
+    
                             //aktiver Knoten = nächster Knoten
-                            const stepAsIndexInNeighbourArray = (stepZ + 1) * 9 + (stepY + 1) * 3 + (stepX + 1)
-                            currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
-                        }
-
+                            content = this.board[indexX][indexY][indexZ][indexW]
+                        
                     } else if (tMaxX === tMaxY) {
                         tMaxX += tDeltaX; tMaxY += tDeltaY;
                         indexX += stepX; indexY += stepY;
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
-                        else {
-                            const stepAsIndexInNeighbourArray = (0 + 1) * 9 + (stepY + 1) * 3 + (stepX + 1)
-                            currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
-                        }
+
+                        content = this.board[indexX][indexY][indexZ][indexW];
+                        
 
                     } else if (tMaxX === tMaxZ) {
                         tMaxX += tDeltaX; tMaxZ += tDeltaZ;
                         indexX += stepX; indexZ += stepZ;
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
-                        else {
-                            const stepAsIndexInNeighbourArray = (stepZ + 1) * 9 + (0 + 1) * 3 + (stepX + 1)
-                            currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
-                        }
+
+                        content = this.board[indexX][indexY][indexZ][indexW];
+            
 
                     } else {
                         tMaxX += tDeltaX;
                         indexX += stepX;
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
-                        else {
-                            const stepAsIndexInNeighbourArray = (0 + 1) * 9 + (0 + 1) * 3 + (stepX + 1)
-                            currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
+                        content = this.board[indexX][indexY][indexZ][indexW];
                         }
-                    }
+                    
 
 
                 } else if (tMaxY === minCoordinate) {
                     if (tMaxY === tMaxZ) {
                         tMaxY += tDeltaY; tMaxZ += tDeltaZ;
                         indexY += stepY; indexZ += stepZ;
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
-                        else {
-                            const stepAsIndexInNeighbourArray = (stepZ + 1) * 9 + (stepY + 1) * 3 + (0 + 1)
-                            currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
-                        }
+                        content = this.board[indexX][indexY][indexZ][indexW];
+                        
 
-                    } else {
+                    }
+                     else {
                         tMaxY += tDeltaY;
                         indexY += stepY;
-                        if (axisBeyondTarget(targetX, targetY, targetZ, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
+                        if (axisBeyondTarget(target.x, target.y, target.z, target.w, indexX, indexY, indexZ, stepX, stepY, stepZ) >= 3) break
                         else {
                             const stepAsIndexInNeighbourArray = (0 + 1) * 9 + (stepY + 1) * 3 + (0 + 1)
                             currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
@@ -168,14 +149,14 @@ class Game {
                         currentIndex = indexAndNeighbourArray[currentIndex][stepAsIndexInNeighbourArray]
                     }
                 }
+                contents.push(content);
+            
             }
 
-            return currentIndex;
+            return contents;
         }
-            */
+        */
+    }  
         
-        return [""]
-        }
-    }
-        
+
 export default Game
