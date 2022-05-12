@@ -1,6 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import { BoxGeometry, Color, Mesh, Vector3 } from "three";
-import StraightLine from "./Line";
+import { Line, useHelper } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import React, { ReactElement, useEffect, useRef, useState } from "react";
+import { Box3Helper, BoxGeometry, BoxHelper, BufferGeometry, Color, Mesh, SphereGeometry, Vector2, Vector3 } from "three";
+import { Line2 } from "three/examples/jsm/lines/Line2";
+import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
+import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
+import { addMouseDown, addPointerEnter, addPointerLeave } from "./Raycaster";
+
+
+const spheres: { geometry: ReactElement<SphereGeometry>, radius: number }[] = [],
+    boxes: { geometry: ReactElement<BoxGeometry>, scale: Vector3 }[] = [];
 
 
 function Box(props: {
@@ -8,68 +17,65 @@ function Box(props: {
     outline?: boolean, transparent?: boolean,
     onMouseDown?: () => void, onMouseEnter?: () => void, onMouseLeave?: () => void
 }) {
-    const gometryRef = useRef<BoxGeometry>();
+    const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
+        outlineColor = new Color(0x000fff),
+        outlineRadius = 0.002;
 
-    const [outline, setOutline] = useState<{ start: Vector3, end: Vector3 }[] | null>(null),
-        [edges, setEdges] = useState<Vector3[] | null>(null);
+    const meshRef = useRef<Mesh>();
+
+    const boxHelperRef = useHelper(meshRef, BoxHelper, outlineColor);
+    let outlineGeometry: BufferGeometry | undefined = undefined;
+    useEffect(() => {
+        const boxHelper = boxHelperRef.current as BoxHelper;
+        if (boxHelper) {
+            outlineGeometry = boxHelper.geometry;
+        }
+    }, []);
 
     useEffect(() => {
-        if (!outline && gometryRef.current) {
-            const verticesCoordinates: number[] = Array.from(gometryRef.current.attributes.position.array),
-                vertices: Vector3[] = [];
+        const mesh = meshRef.current;
+        if (mesh) {
+            if (props.onMouseEnter) addPointerEnter(mesh.id, props.onMouseEnter);
+            if (props.onMouseLeave) addPointerLeave(mesh.id, props.onMouseLeave);
+            if (props.onMouseDown) addMouseDown(mesh.id, props.onMouseDown);
+        }
+    }, []);
+    const [a] = useState(Math.random())
+    const { scene } = useThree();
+    useEffect(() => {
+        if (outlineGeometry) {
+            const vertices: number[] = Array.from(outlineGeometry.attributes.position.array),
+                verticesVector = vertices.map((v, i) => new Vector3(v, vertices[i + 1], vertices[i + 2]));
 
-            verticesCoordinates.forEach((vertex, i) =>
-                i % 3 === 0 ?
-                    vertices.push(new Vector3(
-                        verticesCoordinates[i], verticesCoordinates[i + 1], verticesCoordinates[i + 2]
-                    )) : undefined
-            );
+            verticesVector.forEach((vertex1, i) => {
+                verticesVector.slice(i + 1).forEach((vertex2) => {
+                    if (vertex1.distanceTo(vertex2) === 1) {
+                        const positions = [vertex1.x, vertex1.y, vertex1.z, vertex2.x, vertex2.y, vertex2.z];
 
-            const worldVertices: Vector3[] = vertices.map(vertex => vertex.clone().add(props.pos));
-            setEdges(worldVertices);
-
-
-            const linesBetweenVerticesEnds: { start: Vector3, end: Vector3 }[] = [];
-
-            worldVertices.forEach((start, i) => {
-                const uncheckedVertices = worldVertices.slice(i, -1);
-
-                uncheckedVertices.forEach((end) => {
-                    if (end) {
-                        //not a diagonal connection if 2 coordinates are identical
-                        let identicalCoordinates = Number(start.x === end.x) + Number(start.y === end.y) + Number(start.z === end.z);
-                        if (identicalCoordinates >= 2) linesBetweenVerticesEnds.push({ start, end });
+                        const lineGeometry: LineGeometry = new LineGeometry().setPositions(positions),
+                            lineMaterial = new LineMaterial({
+                                color: outlineColor.getHex(),
+                                linewidth: outlineRadius
+                            })
+                        scene.add(new Line2(lineGeometry, lineMaterial));
                     }
                 })
             });
-
-
-            setOutline(linesBetweenVerticesEnds)
         }
-    })
+    }, []);
 
-
-    const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
-        outlineColor = new Color(0x000fff),
-        outlineRadius = .025;
-
+    const box = boxes.find(box => box.scale.equals(scale));
+    let boxGeometry: ReactElement<BoxGeometry> | undefined = box?.geometry;
+    if (!boxGeometry) {
+        boxGeometry = <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} />
+        boxes.push({ geometry: boxGeometry, scale });
+    }
 
     return <>
-        <mesh position={props.pos}
-            onPointerEnter={props.onMouseEnter} onPointerLeave={props.onMouseLeave} onPointerDown={props.onMouseDown}>
-            <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} ref={gometryRef} />
+        <mesh position={props.pos} ref={meshRef}>
+            {boxGeometry}
             <meshStandardMaterial color={props.color} transparent={props.transparent} opacity={props.transparent ? 0 : 1} />
         </mesh>
-
-        {outline?.map((startEnd, i) =>
-            <StraightLine start={startEnd.start} end={startEnd.end} color={outlineColor} radius={outlineRadius} key={i} />
-        )}
-        {edges?.map((edge, i) =>
-            <mesh position={edge} key={i}>
-                <sphereGeometry args={[outlineRadius]} />
-                <meshStandardMaterial color={outlineColor} />
-            </mesh>
-        )}
     </>
 
 }

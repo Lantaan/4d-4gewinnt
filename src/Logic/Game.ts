@@ -51,12 +51,12 @@ class Game {
                 //Wurzel
                 const distMag = Math.sqrt(dist.x ** 2 + dist.y ** 2 + dist.z ** 2 + dist.w ** 2);
 
-            if (distMag === 0) return [this.board[origin.x][origin.y][origin.z][origin.w]]
+        if (distMag === 0) return [this.board[origin.x][origin.y][origin.z][origin.w]]
 
-            const normalizedRayDirX = dist.x / distMag,
-                normalizedRayDirY = dist.y / distMag,
-                normalizedRayDirZ = dist.z / distMag,
-                normalizedRayDirW = dist.w / distMag;
+        const normalizedRayDirX = dist.x / distMag,
+            normalizedRayDirY = dist.y / distMag,
+            normalizedRayDirZ = dist.z / distMag,
+            normalizedRayDirW = dist.w / distMag;
 
             //direction in which the algorithm will go
             //gibt +1, -1, oder 0
