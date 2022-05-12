@@ -19,6 +19,7 @@ function Tile(props: {
 
     return (<>
         <Box pos={props.displayPos} color={color} transparent={transparent}
+        scale={new Vector3(1, 1, 1)}
             onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
             onMouseDown={() => {
                 const gamePos = props.gamePos,
