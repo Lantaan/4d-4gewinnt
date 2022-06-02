@@ -14,13 +14,14 @@ function Plane(props: { displayPos: Vector3; wPos: number; yPos: number; gameObj
 		<>
 			{relativePositionArray.map((pos, i) => {
 				const gamePos = new Vector4(pos.x, props.yPos, pos.z, props.wPos),
-					filling = props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w];
+					filling = props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w],
+					displayPos = pos.clone().add(props.displayPos);
 
 				return (
 					<Tile
 						gameObject={props.gameObject}
 						gamePos={gamePos}
-						displayPos={pos.add(props.displayPos)}
+						displayPos={displayPos}
 						filledBy={filling}
 						key={i}
 					/>
