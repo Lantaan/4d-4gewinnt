@@ -18,35 +18,35 @@ function frame(camera: Camera, scene: Scene) {
 	const intersects = raycaster.intersectObjects(scene.children);
 
 	intersects.some(intersect => {
-		if (intersect) {
-			const object = intersect.object,
-				id = object.id;
+		const object = intersect.object,
+			id = object.id;
 
-			let callbackForObjectExists: boolean = false;
+		let callbackForObjectExists: boolean = false;
 
-			if (id !== previousObjectId) {
-				if (previousObjectId !== null) {
-					const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
-					if (leaveCallback) leaveCallback();
-				}
-
-				const enterCallback = onPointerEnterFunctions.get(id);
-				if (enterCallback) {
-					callbackForObjectExists = true;
-					enterCallback();
-				}
-				previousObjectId = id;
-			}
-
-			if (callbackForObjectExists) return true;
-		} else {
+		if (id !== previousObjectId) {
 			if (previousObjectId !== null) {
 				const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
 				if (leaveCallback) leaveCallback();
 			}
-			previousObjectId = null;
+
+			const enterCallback = onPointerEnterFunctions.get(id);
+			if (enterCallback) {
+				callbackForObjectExists = true;
+				enterCallback();
+			}
+			previousObjectId = id;
 		}
+
+		if (callbackForObjectExists) return true;
 	});
+
+	if (intersects.length === 0) {
+		if (previousObjectId !== null) {
+			const leaveCallback = onPointerLeaveFunctions.get(previousObjectId);
+			if (leaveCallback) leaveCallback();
+		}
+		previousObjectId = null;
+	}
 }
 
 function useMouseRaycaster() {

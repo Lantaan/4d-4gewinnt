@@ -63,16 +63,16 @@ function App() {
 					<pointLight position={[10, 10, 10]} />
 
 					<Tower gameObject={gameObject} displayPos={towerStartingPos.clone()} wPos={0} />
-					<Tower gameObject={gameObject} displayPos={towerStartingPos.clone().add(towerChange.clone())} wPos={0} />
+					<Tower gameObject={gameObject} displayPos={towerStartingPos.clone().add(towerChange.clone())} wPos={1} />
 					<Tower
 						gameObject={gameObject}
 						displayPos={towerStartingPos.clone().add(towerChange.clone().multiplyScalar(2))}
-						wPos={0}
+						wPos={2}
 					/>
 					<Tower
 						gameObject={gameObject}
 						displayPos={towerStartingPos.clone().add(towerChange.clone().multiplyScalar(3))}
-						wPos={0}
+						wPos={3}
 					/>
 				</Canvas>
 			</div>
