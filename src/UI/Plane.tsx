@@ -1,5 +1,7 @@
-import { Color, Vector3, Vector4 } from 'three';
+import { useEffect, useRef } from 'react';
+import { Color, DoubleSide, Euler, Mesh, Vector3, Vector4 } from 'three';
 import Game from '../Logic/Game';
+import { addPointerEnter, addPointerLeave } from './Raycaster';
 import Tile from './Tile';
 
 function Plane(props: { displayPos: Vector3; wPos: number; yPos: number; gameObject: Game }) {
@@ -10,6 +12,19 @@ function Plane(props: { displayPos: Vector3; wPos: number; yPos: number; gameObj
 		}
 	}
 
+	const planeRef = useRef<Mesh>();
+	const planeRotation = new Euler(Math.PI / 2);
+	const planePosition = props.displayPos.clone().add(new Vector3(1.5, -0.51, 1.5));
+
+	useEffect(() => {
+		const mesh = planeRef.current;
+		if (mesh) {
+			//make the plane block pointer events for tiles behind it
+			addPointerEnter(mesh.id, () => null);
+			addPointerLeave(mesh.id, () => null);
+		}
+	}, []);
+
 	return (
 		<>
 			{relativePositionArray.map((pos, i) => {
@@ -18,15 +33,13 @@ function Plane(props: { displayPos: Vector3; wPos: number; yPos: number; gameObj
 					displayPos = pos.clone().add(props.displayPos);
 
 				return (
-					<Tile
-						gameObject={props.gameObject}
-						gamePos={gamePos}
-						displayPos={displayPos}
-						filledBy={filling}
-						key={i}
-					/>
+					<Tile gameObject={props.gameObject} gamePos={gamePos} displayPos={displayPos} filledBy={filling} key={i} />
 				);
 			})}
+			<mesh position={planePosition} rotation={planeRotation} ref={planeRef}>
+				<planeGeometry args={[4, 4]} />
+				<meshBasicMaterial color={new Color(0xff00ff)} side={DoubleSide} />
+			</mesh>
 		</>
 	);
 }
