@@ -12,7 +12,7 @@ import { OrbitControls } from '@react-three/drei';
 import { PopupComponent } from './Popup';
 
 const gameObject = new Game();
-
+gameObject.test();
 function App() {
 	return (
 		<>
@@ -28,6 +28,7 @@ function App() {
 			<PopupComponent />
 		</>
 	);
+	
 }
 
 export default App;
