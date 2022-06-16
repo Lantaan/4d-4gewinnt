@@ -23,19 +23,42 @@ function Tile(props: {
 	return (
 		<>
 			<Box
-				pos={props.displayPos}
+				pos={props.displayPos.clone()}
 				color={color}
 				transparent={transparent}
 				onMouseEnter={() => setHover(true)}
 				onMouseLeave={() => setHover(false)}
 				onMouseDown={() => {
 					const gamePos = props.gamePos,
-						turnMessage = props.gameObject.turn(props.gamePos);
+						turnResult = props.gameObject.turn(props.gamePos);
 
-                    const popup = new Popup(<button onClick={()=>popup.close()}>{turnMessage}</button>);
-                    popup.show();
+					let turnMessage: string, messageColor: string;
+					if (!turnResult.winner && turnResult.turn) {
+						turnMessage = `It's your turn ${turnResult.turn}`;
+						messageColor = 'black';
+					} else if (turnResult.winner) {
+						turnMessage = `${turnResult.winner} won!`;
+						messageColor = 'green';
+					} else {
+						turnMessage = `This is not a valid placement`;
+						messageColor = 'red';
+					}
 
-					setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
+					const popup = new Popup(
+						(
+							<>
+								<h1 style={{ paddingLeft: '20px', paddingRight: '20px', color: messageColor }}>{turnMessage}</h1>
+								<div style={{ justifyContent: 'center', display: 'flex' }}>
+									<button onClick={() => popup.close()} style={{fontSize: "20px", width: "60px"}}>
+										OK
+									</button>
+								</div>
+							</>
+						)
+					);
+					popup.show();
+
+					if (turnResult.turn) setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
 				}}
 			/>
 		</>

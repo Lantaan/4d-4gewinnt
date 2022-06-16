@@ -21,7 +21,7 @@ function PopupComponent(props: {}) {
 let openPopup: Popup|null = null;
 class Popup {
 	constructor(private content: ReactElement) {}
-	show() {
+	show() {console.log(this.content)
 		if (setPopupContent) {
 			setPopupContent(this.content);
 			openPopup = this;

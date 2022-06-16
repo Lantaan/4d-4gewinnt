@@ -1,5 +1,7 @@
 //Strichpunkte sind empfohlen, aber nicht nötig
 
+import Game from "./Game";
+
 class BeispielClasse {
     beispielAttribut = 1;
 }
@@ -134,10 +136,13 @@ class Tutorial {
         console.log(ausgabe);
     }
 }
-
+function test(){
+    let a = new Game;
+    console.log(a.test());
+}
 
 
 //am Ende jeder datei muss "export default ..." stehen,
 //damit man das was in der Datei geschrieben wurde auch in anderen Dateien benutzen kann
-//wenn man das nicht macht wird sich TypeScript auch beschwehren
+//wenn man das nicht macht wird sich TypeScript auch beschweren
 export default Tutorial;
