@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react';
 
-import { Vector4 } from "three";
+import { Vector4 } from 'three';
 
 class Game {
     punkte: boolean = false;

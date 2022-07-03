@@ -42,7 +42,7 @@ function Tile(props: {
 					} else {
 						turnMessage = `This is not a valid placement`;
 						messageColor = 'red';
-					}
+					}console.log(turnResult);
 
 					const popup = new Popup(
 						(
@@ -58,7 +58,7 @@ function Tile(props: {
 					);
 					popup.show();
 
-					if (turnResult.turn) setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
+					setFilledBy(props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]);
 				}}
 			/>
 		</>
