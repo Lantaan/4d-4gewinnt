@@ -3,9 +3,14 @@ import React from "react";
 import { Vector4 } from "three";
 
 class Game {
+    punkte: boolean = false;
     activeplayer: ("player1" | "player2") = "player1";
     board: ("no marker" | "player1" | "player2")[][][][] = [[[[]]]];
-    constructor() {
+    p1: number =0;
+    p2: number =0;
+    turnnumber: number =0;
+    safe: number =0;
+    constructor(punkte: boolean) {
         //am Anfang sind alle Felder leer
 
         for (let a: number =0; a<4; a++) {
@@ -20,22 +25,36 @@ class Game {
                 }
             }
         }
+        this.punkte = punkte;
+
     }
 
     turn(pos: Vector4): {winner: ("player1"|"player2"|null); turn: ("player1"|"player2"|null)}{
-        //Feld ist schon besetzt
+        //winner: ob und wer das Spiel gewonnen wurde, turn: wer dran ist 
+        //Feld ist schon besetzt, daher 
         if(this.board[pos.x][pos.y][pos.z][pos.w]!= "no marker"){
             return {winner: null, turn: null}
         }
-        //Einer der Spieler hat eine Reihe voll
+        //Einer der Spieler hat eine Reihe voll, Spiel endet
         this.board[pos.x][pos.y][pos.z][pos.w]=this.activeplayer;
         if(this.checkifcompleterow(pos)){return {winner: this.activeplayer, turn: null}}
-        //Das Spiel geht normal weiter
+       //Punktzahl wird abgerechnet
+       if(this.activeplayer=="player1"){this.p1=this.p1 + this.safe/2}else{this.p2=this.p2+this.safe/2}
+        //Keins der beiden trifft ein, Spiel geht normal weiter
         if(this.activeplayer=="player1"){this.activeplayer="player2"}else{this.activeplayer="player1"}
+        this.turnnumber++;
+        //bei Punkten wird nach 40 Runden das Spiel beendet
+        if(this.punkte && this.turnnumber == 40){
+            if (this.p1>this.p2){return {winner: "player1", turn: null}}
+        else {return{winner: "player2", turn: null}
+    } 
+    
+        }
         return {winner: null,turn: this.activeplayer}
     }
 
     checkifcompleterow(pos:Vector4): boolean {
+        this.safe=0;
         let dir = new Vector4(0,0,0,0);
         //checkrow wird mit allen verschiedenen Richtungen durchgeführt
 for (let i=-1; i<2; i++){
@@ -47,9 +66,12 @@ for (let i=-1; i<2; i++){
             for (let l=-1; l<2;l++)
             dir.setW(l);
             if (dir.x==dir.y&&dir.z==dir.w&&dir.w==dir.x&&dir.x==0){}
-            else{
+            //wenn das Spiel auf Punkte gestellt ist, werden die neuen vollen Reihen nur gespeichert
+            else if (!this.punkte){
             if (this.checkrow(pos,dir))return true;
-            }
+            }else{
+                if (this.checkrow(pos,dir)){this.safe++}
+        }
         } 
     }
 }
@@ -62,12 +84,13 @@ for (let i=-1; i<2; i++){
         pos = pos.add(direction);
      }
         while (pos.x>-1 && pos.y>-1 && pos.z>-1 && pos.w>-1){
-            //dabei werden alle Inhalte der Reihe gespeichert
+            //danach wird die Reihe bis zum anderen Ende durchgegangen, alle Inhalte werden gespeichert
          contents.push(this.board[pos.x][pos.y][pos.z][pos.w])
          pos = pos.sub(direction);   
         }
         //Wenn einer der Spieler die Reihe voll hat, wird true zurückgegeben
-        if(contents[0] == contents[3] && contents[1]==contents[2] && contents[1] == contents[0] && contents[0] != "no marker"){return true}
+        if(contents[0] == contents[3] && contents[1]==contents[2] && contents[1] == contents[0] && contents[0] != "no marker")
+        {return true}
         return false
     }
     test(){
