@@ -66,7 +66,7 @@ for (let i=-1; i<2; i++){
             for (let l=-1; l<2;l++)
             dir.setW(l);
             if (dir.x==dir.y&&dir.z==dir.w&&dir.w==dir.x&&dir.x==0){}
-            //wenn das Spiel auf Punkte gestellt ist, werden die neuen vollen Reihen nur gespeichert
+            //wenn das Spiel auf Punkte gestellt ist, werden die vollen Reihen nur gespeichert
             else if (!this.punkte){
             if (this.checkrow(pos,dir))return true;
             }else{
