@@ -1,114 +1,57 @@
-import { Line, useHelper } from "@react-three/drei";
-import { useThree } from "@react-three/fiber";
-import React, { ReactElement, useEffect, useRef, useState } from "react";
-import {
-  Box3Helper,
-  BoxGeometry,
-  BoxHelper,
-  BufferGeometry,
-  Color,
-  Mesh,
-  SphereGeometry,
-  Vector2,
-  Vector3,
-} from "three";
-import { Line2 } from "three/examples/jsm/lines/Line2";
-import { LineGeometry } from "three/examples/jsm/lines/LineGeometry";
-import { LineMaterial } from "three/examples/jsm/lines/LineMaterial";
+import { useHelper } from "@react-three/drei";
+import { useEffect, useRef } from "react";
+import { BoxHelper, Color, Mesh, Vector3 } from "three";
 import { addMouseDown, addPointerEnter, addPointerLeave } from "./Raycaster";
 
-const spheres: { geometry: ReactElement<SphereGeometry>; radius: number }[] =
-    [],
-  boxes: { geometry: ReactElement<BoxGeometry>; scale: Vector3 }[] = [];
+//man hat sehr viele Boxen. Man kann für alle gleichen Boxen die selbe geometry benutzen
+//das sollte man auch machen, weil es das Programm deutlich schneller laufen lässt
+const boxGeometry = <boxGeometry args={[1, 1, 1] /*breite, höhe, tiefe*/} />;
 
 function Box(props: {
   pos: Vector3;
   color: Color;
-  scale?: Vector3;
   outline?: boolean;
   transparent?: boolean;
   onMouseDown?: () => void;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
 }) {
-  const scale = props.scale === undefined ? new Vector3(1, 1, 1) : props.scale,
-    outlineColor = new Color(0x000fff),
-    outlineRadius = 0.002,
-    pos = props.pos.clone();
+  const outlineColor = new Color(0x000fff),
+    outlineRadius = 0.002;
 
+  //siehe Plane.tsx für eine genaue Beschreibung von useRef()
   const meshRef = useRef<Mesh>();
 
-  const boxHelperRef = useHelper(meshRef, BoxHelper, outlineColor);
-  let outlineGeometry: BufferGeometry | undefined = undefined;
-  useEffect(() => {
-    const boxHelper = boxHelperRef.current as BoxHelper;
-    if (boxHelper) {
-      outlineGeometry = boxHelper.geometry;
-    }
-  }, []);
+  //useHelper ist eine Abstraction von "Drei" library
+  //ein BoxHelper ist ein Mesh, das einen Rahmen um ein anderes Mesh herum darstellt
+  //useHelper erzeugt so einen BoxHelper mit der Farbe "outlineColor",
+  //um den Mesh von meshRef drumrum
+  useHelper(meshRef, BoxHelper, outlineColor);
 
+  //man muss auf meshRef.current zugreifen
+  //aber meshRef.current existiert beim ersten render nicht
+  //deshalb benutzt man useEffect um direkt nach dem ersten Render was zu machen
+  //genauso wie bei Plane.tsx
   useEffect(() => {
     const mesh = meshRef.current;
     if (mesh) {
+      //funktionen für Raycaster. Siehe Raycaster.tsx
+      //basically macht es so, dass wenn über die Box gehovert/geclickt wird,
+      //die entsprechenden Funktionen die über props übergeben wurden, aufgerufen werden
       if (props.onMouseEnter) addPointerEnter(mesh.id, props.onMouseEnter);
       if (props.onMouseLeave) addPointerLeave(mesh.id, props.onMouseLeave);
       if (props.onMouseDown) addMouseDown(mesh.id, props.onMouseDown);
     }
   }, []);
-  const { scene } = useThree();
-  useEffect(() => {
-    if (outlineGeometry) {
-      const vertices: number[] = Array.from(
-          outlineGeometry.attributes.position.array
-        ),
-        verticesVector: Vector3[] = [];
-      for (let i = 0; i < vertices.length; i += 3) {
-        verticesVector.push(new Vector3(vertices[i], vertices[i + 1], vertices[i + 2]));
-      }
-
-      verticesVector.forEach((vertex1, i) => {
-        verticesVector.slice(i + 1).forEach((vertex2) => {
-          if (vertex1.distanceTo(vertex2) === 1) {
-            const positions = [
-              vertex1.x,
-              vertex1.y,
-              vertex1.z,
-              vertex2.x,
-              vertex2.y,
-              vertex2.z,
-            ];
-
-            const lineGeometry: LineGeometry = new LineGeometry().setPositions(
-                positions
-              ),
-              lineMaterial = new LineMaterial({
-                color: outlineColor.getHex(),
-                linewidth: outlineRadius,
-              }),
-              line = new Line2(lineGeometry, lineMaterial);
-            scene.add(line);
-          }
-        });
-      });
-    }
-  }, []);
-
-  const box = boxes.find((box) => box.scale.equals(scale));
-  let boxGeometry: ReactElement<BoxGeometry> | undefined = box?.geometry;
-  if (!boxGeometry) {
-    boxGeometry = (
-      <boxGeometry args={[1 * scale.x, 1 * scale.y, 1 * scale.z]} />
-    );
-    boxes.push({ geometry: boxGeometry, scale });
-  }
 
   return (
     <>
-      <mesh position={props.pos.clone()} ref={meshRef}>
+      <mesh position={props.pos} ref={meshRef}>
         {boxGeometry}
         <meshStandardMaterial
           color={props.color}
           transparent={props.transparent}
+          //wenn es transparent sein, soll setze die Farbintensität auf 0
           opacity={props.transparent ? 0 : 1}
         />
       </mesh>

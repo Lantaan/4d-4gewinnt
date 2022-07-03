@@ -1,47 +1,88 @@
-import { useEffect, useRef } from 'react';
-import { Color, DoubleSide, Euler, Mesh, Vector3, Vector4 } from 'three';
-import Game from '../Logic/Game';
-import { addPointerEnter, addPointerLeave } from './Raycaster';
-import Tile from './Tile';
+import { useEffect, useRef } from "react";
+import { Color, DoubleSide, Euler, Mesh, Vector3, Vector4 } from "three";
+import Game from "../Logic/Game";
+import { addPointerEnter, addPointerLeave } from "./Raycaster";
+import Tile from "./Tile";
 
-function Plane(props: { displayPos: Vector3; wPos: number; yPos: number; gameObject: Game }) {
-	const relativePositionArray: Vector3[] = [];
-	for (let x = 0; x < 4; x++) {
-		for (let z = 0; z < 4; z++) {
-			relativePositionArray.push(new Vector3(x, 0, z));
-		}
-	}
+function Plane(props: {
+  displayPos: Vector3;
+  wPos: number;
+  yPos: number;
+  gameObject: Game;
+}) {
+  //feld mit 16 Elmenten
+  //jedes Element gibt die position einer Zelle, relativ zur Ebene an
+  //relative Anzeigeposition und relative Logikposition der Zelle sind identisch
+  const relativePositionArray: Vector3[] = [];
+  for (let x = 0; x < 4; x++) {
+    for (let z = 0; z < 4; z++) {
+      relativePositionArray.push(new Vector3(x, 0, z));
+    }
+  }
 
-	const planeRef = useRef<Mesh>();
-	const planeRotation = new Euler(Math.PI / 2);
-	const planePosition = props.displayPos.clone().add(new Vector3(1.5, -0.51, 1.5));
+  //alle Objekt die man returnt wurden zum Zeitpunkt der Funktion noch nicht gerendert
+  //Ref ermöglicht es auf ein Objekt, das man zurückgibt zuzugreifen (sobald es gerendert wurde)
+  //sobald die Funktion das erste mal gelaufen ist (= alle Rückgabewerte gerendert wurden)
+  //wird planeRef.current zum Objekt auf das man zugreifen will
+  //das Objekt dem planeRef zugeordnet ist, wird im return angegeben
+  //mit plane, ist die Ebene gemeint, die unter den Zellen ist (ich glaube sie ist magenta)
+  const planeRef = useRef<Mesh>();
+  const planeRotation = new Euler(Math.PI / 2);
+  const planePosition = props.displayPos
+    .clone()
+    .add(new Vector3(1.5, -0.51, 1.5));
 
-	useEffect(() => {
-		const mesh = planeRef.current;
-		if (mesh) {
-			//make the plane block pointer events for tiles behind it
-			addPointerEnter(mesh.id, () => null);
-			addPointerLeave(mesh.id, () => null);
-		}
-	}, []);
+  //der code in useEffect wird ausgeführt, sobald die Funktion ein mal gelaufen ist
+  //also kann man in useEffect auf planeRef.current zugreifen
+  useEffect(() => {
+    const mesh = planeRef.current;
+    //nötig weil sich typescript sonst beschwert
+    if (mesh) {
+      //wenn Maus auf der magenta Ebene ist,
+      //können keine Zellen hinter der Ebene angeclickt werden
+      addPointerEnter(mesh.id, () => null);
+      addPointerLeave(mesh.id, () => null);
+    }
+  }, []);
 
-	return (
-		<>
-			{relativePositionArray.map((pos, i) => {
-				const gamePos = new Vector4(pos.x, props.yPos, pos.z, props.wPos),
-					filling = props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w],
-					displayPos = pos.clone().add(props.displayPos);
+  return (
+    <>
+      {
+        //für jedes element in relativePositionArray erzeuge eine neue "Tile" (= Zelle)
+        relativePositionArray.map((pos, i) => {
+          //position der Zelle in props.gameObject
+          const gamePos = new Vector4(pos.x, props.yPos, pos.z, props.wPos),
+            //gibt an, ob ein Spieler auf die Zelle einen Marker plaziert hat
+            filling =
+              props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][
+                gamePos.w
+              ],
+            //pos ist eine referenz zu einem Vector3. Wenn man .add() macht würde pos verändert werden,
+            //weil es nur eine referenz ist. Deshalb braucht man .clone(), damit pos gleich bleibt
+            displayPos = pos.clone().add(props.displayPos);
 
-				return (
-					<Tile gameObject={props.gameObject} gamePos={gamePos} displayPos={displayPos} filledBy={filling} key={i} />
-				);
-			})}
-			<mesh position={planePosition} rotation={planeRotation} ref={planeRef}>
-				<planeGeometry args={[4, 4]} />
-				<meshBasicMaterial color={new Color(0xff00ff)} side={DoubleSide} />
-			</mesh>
-		</>
-	);
+          return (
+            <Tile
+              gameObject={props.gameObject}
+              gamePos={gamePos}
+              displayPos={displayPos}
+              filledBy={filling}
+              key={i}
+            />
+          );
+        })
+      }
+      {/*die magenta Ebene*/}
+      <mesh
+        position={planePosition}
+        rotation={planeRotation}
+        ref={planeRef} /*planeRef.current wird zu diesem mesh*/
+      >
+        <planeGeometry args={[4, 4]} />
+        <meshBasicMaterial color={new Color(0xff00ff)} side={DoubleSide} />
+      </mesh>
+    </>
+  );
 }
 
 export default Plane;
