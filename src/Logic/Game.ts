@@ -39,17 +39,20 @@ class Game {
 		}
 		//Einer der Spieler hat eine Reihe voll, Spiel endet
 		this.board[pos.x][pos.y][pos.z][pos.w] = this.activeplayer;
-		if (this.checkifcompleterow(pos)) {
+		let completeRow = this.checkifcompleterow(pos);
+		if (completeRow && !this.punkte) {
 			return { winner: this.activeplayer, turn: null };
+		} else if (completeRow) {
+			//Punktzahl wird abgerechnet
+			if (this.activeplayer == 'player1') {
+				this.p1 += Number(completeRow)/2;
+				if (this.updateDisplayPointsP1) this.updateDisplayPointsP1(this.p1);
+			} else {
+				this.p2 += Number(completeRow)/2;
+				if (this.updateDisplayPointsP2) this.updateDisplayPointsP2(this.p2);
+			}
 		}
-		//Punktzahl wird abgerechnet
-		if (this.activeplayer == 'player1') {
-			this.p1 = this.p1 + this.safe / 2;
-			if (this.updateDisplayPointsP1) this.updateDisplayPointsP1(this.p1);
-		} else {
-			this.p2 = this.p2 + this.safe / 2;
-			if (this.updateDisplayPointsP2) this.updateDisplayPointsP2(this.p2);
-		}
+
 		//Keins der beiden trifft ein, Spiel geht normal weiter
 		if (this.activeplayer == 'player1') {
 			this.activeplayer = 'player2';
@@ -69,9 +72,9 @@ class Game {
 		return { winner: null, turn: this.activeplayer };
 	}
 
-	checkifcompleterow(pos: Vector4): boolean {
-		this.safe = 0;
+	checkifcompleterow(pos: Vector4): boolean | number {
 		let dir = new Vector4(0, 0, 0, 0);
+		let filledRows = 0;
 		//checkrow wird mit allen verschiedenen Richtungen durchgeführt
 		for (let i = -1; i < 2; i++) {
 			dir.setX(i);
@@ -79,23 +82,26 @@ class Game {
 				dir.setY(j);
 				for (let k = -1; k < 2; k++) {
 					dir.setZ(k);
-					for (let l = -1; l < 2; l++) dir.setW(l);
-					if (dir.x == dir.y && dir.z == dir.w && dir.w == dir.x && dir.x == 0) {
-					}
-					//wenn das Spiel auf Punkte gestellt ist, werden die vollen Reihen nur gespeichert
-					else if (!this.punkte) {
-						if (this.checkrow(pos.clone(), dir)) {
-							return true;
+					for (let l = -1; l < 2; l++) {
+						dir.setW(l);
+						if (dir.x == dir.y && dir.z == dir.w && dir.w == dir.x && dir.x == 0) {
 						}
-					} else {
-						if (this.checkrow(pos.clone(), dir)) {
-							this.safe++;
+						//wenn das Spiel auf Punkte gestellt ist, werden die vollen Reihen nur gespeichert
+						else if (!this.punkte) {
+							if (this.checkrow(pos.clone(), dir)) {
+								return true;
+							}
+						} else {
+							if (this.checkrow(pos.clone(), dir)) {
+								filledRows++;
+							}
 						}
 					}
 				}
 			}
 		}
-		return false;
+		if (!this.punkte) return false;
+		else return filledRows;
 	}
 	checkrow(position: Vector4, direction: Vector4): boolean {
 		let pos = position.clone();
@@ -104,6 +110,7 @@ class Game {
 			//die Reihe wird bis zu einem Ende durchgegangen
 			pos = pos.add(direction);
 		}
+        pos.sub(direction);
 		while (pos.x < 4 && pos.x > -1 && pos.y > -1 && pos.y < 4 && pos.z < 4 && pos.z > -1 && pos.w > -1 && pos.w < 4) {
 			//danach wird die Reihe bis zum anderen Ende durchgegangen, alle Inhalte werden gespeichert
 			contents.push(this.board[pos.x][pos.y][pos.z][pos.w]);
@@ -114,7 +121,8 @@ class Game {
 			contents[0] == contents[3] &&
 			contents[1] == contents[2] &&
 			contents[1] == contents[0] &&
-			contents[0] != 'no marker'
+			contents[0] != 'no marker' &&
+            contents[0] != undefined
 		) {
 			return true;
 		}
