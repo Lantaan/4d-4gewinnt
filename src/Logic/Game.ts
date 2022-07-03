@@ -46,10 +46,10 @@ class Game {
         //bei Punkten wird nach 40 Runden das Spiel beendet
         if(this.punkte && this.turnnumber == 40){
             if (this.p1>this.p2){return {winner: "player1", turn: null}}
-        else {return{winner: "player2", turn: null}
-    } 
-    
+        else {return{winner: "player2", turn: null}}
         }
+    
+        
         return {winner: null,turn: this.activeplayer}
     }
 
@@ -68,7 +68,7 @@ for (let i=-1; i<2; i++){
             if (dir.x==dir.y&&dir.z==dir.w&&dir.w==dir.x&&dir.x==0){}
             //wenn das Spiel auf Punkte gestellt ist, werden die vollen Reihen nur gespeichert
             else if (!this.punkte){
-            if (this.checkrow(pos.clone(),dir))return true;
+            if (this.checkrow(pos.clone(),dir)){return true};
             }else{
                 if (this.checkrow(pos.clone(),dir)){this.safe++}
         }
@@ -94,13 +94,6 @@ for (let i=-1; i<2; i++){
         {return true}
         return false
     }
-    test(){
-        this.board[0][0][0][0] = "player1";
-        this.board[1][0][1][0] = "player1";
-        this.board[2][0][2][0] = "player1";
-        this.board[3][0][3][0] = "player1";
-        let  pos = new Vector4(2,0,2,0);
-        console.log(this.checkifcompleterow(pos));
-   }
+   
     }  
 export default Game
