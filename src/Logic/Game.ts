@@ -68,9 +68,9 @@ for (let i=-1; i<2; i++){
             if (dir.x==dir.y&&dir.z==dir.w&&dir.w==dir.x&&dir.x==0){}
             //wenn das Spiel auf Punkte gestellt ist, werden die neuen vollen Reihen nur gespeichert
             else if (!this.punkte){
-            if (this.checkrow(pos,dir))return true;
+            if (this.checkrow(pos.clone(),dir))return true;
             }else{
-                if (this.checkrow(pos,dir)){this.safe++}
+                if (this.checkrow(pos.clone(),dir)){this.safe++}
         }
         } 
     }

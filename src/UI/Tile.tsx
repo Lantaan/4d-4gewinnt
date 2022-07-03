@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import { Color, Mesh, Vector3, Vector4 } from "three";
+import { useState } from "react";
+import { Color, Vector3, Vector4 } from "three";
 import Game from "../Logic/Game";
 import Box from "./Box";
 import { Popup } from "./Popup";
@@ -44,7 +44,7 @@ function Tile(props: {
         //ein Popup mit infos zum Zug angezeigt werden
         //wenn ein Zug nicht gemacht werden kann (z.B. weil der Würfel schon gefüllt ist),
         //handelt diese Situation trotzdem die turn methode
-        onMouseDown={() => {
+        onMouseDown={() => {console.log(props.gamePos)
           const gamePos = props.gamePos,
             turnResult = props.gameObject.turn(props.gamePos);
 
@@ -89,7 +89,7 @@ function Tile(props: {
             )
           );
           popup.show();
-
+		  console.log(gamePos)
           //updatet Anzeigefarbe von Würfel
           setFilledBy(
             props.gameObject.board[gamePos.x][gamePos.y][gamePos.z][gamePos.w]

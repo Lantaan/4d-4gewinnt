@@ -9,7 +9,9 @@ import CameraManager from "./CameraManager";
 import { useState } from "react";
 
 //handlet die Logik hinter dem Spiel. Pauls verantwortung
-const game = new Game();
+//der boolean im Argument gibt an ob eine einzige Reihe reicht um zu gewinnen,
+//oder es mit Punkten ist
+const game = new Game(true);
 //das Spielfeld besteht aus 4 Türmen
 //untere linke vordere Ecke vom Turm 1 ist bei towerStartingPos
 //alle weiteren Türme werden um towerChange verschoben
