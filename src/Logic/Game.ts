@@ -80,11 +80,11 @@ for (let i=-1; i<2; i++){
     checkrow(position: Vector4, direction: Vector4): boolean{
         let pos =position.clone();
         let contents: string[] = [];
-        while (pos.x<4 && pos.y<4 && pos.z<4 && pos.w<4){
+        while (pos.x<4 &&pos.x>-1&&pos.y>-1 &&pos.y<4 && pos.z<4 &&pos.z>-1&&pos.w>-1&& pos.w<4){
             //die Reihe wird bis zu einem Ende durchgegangen
         pos = pos.add(direction);
      }
-        while (pos.x>-1 && pos.y>-1 && pos.z>-1 && pos.w>-1){
+        while (pos.x<4 &&pos.x>-1&&pos.y>-1 &&pos.y<4 && pos.z<4 &&pos.z>-1&&pos.w>-1&& pos.w<4){
             //danach wird die Reihe bis zum anderen Ende durchgegangen, alle Inhalte werden gespeichert
          contents.push(this.board[pos.x][pos.y][pos.z][pos.w])
          pos = pos.sub(direction);   
