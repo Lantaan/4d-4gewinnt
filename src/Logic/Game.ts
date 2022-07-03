@@ -77,7 +77,8 @@ for (let i=-1; i<2; i++){
 }
         return false;
     }
-    checkrow(pos: Vector4, direction: Vector4): boolean{
+    checkrow(position: Vector4, direction: Vector4): boolean{
+        let pos =position.clone();
         let contents: string[] = [];
         while (pos.x<4 && pos.y<4 && pos.z<4 && pos.w<4){
             //die Reihe wird bis zu einem Ende durchgegangen
