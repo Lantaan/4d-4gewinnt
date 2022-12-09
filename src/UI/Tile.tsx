@@ -26,7 +26,7 @@ function Tile(props: {
   //wenn man drüberhovert und dann soll der Würfel mit schwarz gefüllt sein
   let color: Color = new Color(0x000000);
   if (filledBy === "player1") color = new Color(0xff0000);
-  else if (filledBy === "player2") color = new Color(0x00ff00);
+  else if (filledBy === "player2") color = new Color(0x0000ff);
   else color = new Color(0x000000);
 
   return (
