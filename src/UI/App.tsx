@@ -1,33 +1,32 @@
 import './App.css';
 import {Canvas} from '@react-three/fiber';
-import {Vector3} from 'three';
+import {Material, Mesh, Vector3, Vector4} from 'three';
 import {CustomRaycaster} from './Raycaster';
 import Game from '../Logic/Game';
 import Tower from './Tower';
 import {PopupComponent} from './Popup';
 import CameraManager from './CameraManager';
-import {useState} from 'react';
+import {Ref, useEffect, useRef, useState} from 'react';
 import PointsDisplay from './PointsDisplay';
+import {towerChange} from "../utils/consts";
+import {gameToUICoordinates} from "../utils/gameToUICoordinates";
 
 //handlet die Logik hinter dem Spiel. Pauls verantwortung
 //der boolean im Argument gibt an ob eine einzige Reihe reicht um zu gewinnen,
 //oder es mit Punkten ist
-const withPoints = !window.confirm('Soll eine einzige Reihe gewinnen?');
-const game = new Game(withPoints);
+const game = new Game(40);
 //das Spielfeld besteht aus 4 Türmen
 //untere linke vordere Ecke vom Turm 1 ist bei towerStartingPos
 //alle weiteren Türme werden um towerChange verschoben
-const towerStartingPos = new Vector3(-8, -2, 0),
-    towerChange = new Vector3(8, 0, 0);
 //Mitten der Türme (nur auf x und z achsen)
 //Kamera kann mit linksklick halten, um Turmmitten rotiert werden
 //y vom Zentrum der Kamerarotation kann mit mausrad verändert werden,
 //deshalb ist y hier nicht angegeben
 const towerCenters = [
-    towerStartingPos.clone().add(new Vector3(1.5, 0, 1.5)),
-    towerStartingPos.clone().add(towerChange).add(new Vector3(1.5, 0, 1.5)),
-    towerStartingPos.clone().add(towerChange.clone().multiplyScalar(2)).add(new Vector3(1.5, 0, 1.5)),
-    towerStartingPos.clone().add(towerChange.clone().multiplyScalar(3)).add(new Vector3(1.5, 0, 1.5))
+    gameToUICoordinates(new Vector4(0,0,0,0)).add(new Vector3(1.5, 0, 1.5)),
+    gameToUICoordinates(new Vector4(0,0,0,1)).add(new Vector3(1.5, 0, 1.5)),
+    gameToUICoordinates(new Vector4(0,0,0,2)).add(new Vector3(1.5, 0, 1.5)),
+    gameToUICoordinates(new Vector4(0,0,0,3)).add(new Vector3(1.5, 0, 1.5))
 ];
 
 //quasi main Funktion der App
@@ -103,18 +102,10 @@ function App() {
                     <directionalLight position={[2.5, 5, 10]} intensity={0.5}/>
 
                     {/*Spielfeld*/}
-                    <Tower gameObject={game} displayPos={towerStartingPos.clone()} wPos={0}/>
-                    <Tower gameObject={game} displayPos={towerStartingPos.clone().add(towerChange.clone())} wPos={1}/>
-                    <Tower
-                        gameObject={game}
-                        displayPos={towerStartingPos.clone().add(towerChange.clone().multiplyScalar(2))}
-                        wPos={2}
-                    />
-                    <Tower
-                        gameObject={game}
-                        displayPos={towerStartingPos.clone().add(towerChange.clone().multiplyScalar(3))}
-                        wPos={3}
-                    />
+                    {[0, 1, 2, 3].map((w) => (<Tower
+                        displayPos={gameToUICoordinates(new Vector4(0,0,0,w))}
+                        wPos={w} gameObject={game}/>)
+                    )}
                 </Canvas>
             </div>
             {/*content wird verändert um unterschiedliche Popups zu erzeugen*/}

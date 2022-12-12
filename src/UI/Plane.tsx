@@ -1,5 +1,5 @@
-import {useEffect, useRef} from "react";
-import {Color, DoubleSide, Euler, Mesh, Vector3, Vector4} from "three";
+import {Ref, useEffect, useRef} from "react";
+import {Color, DoubleSide, Euler, Material, Mesh, Vector3, Vector4} from "three";
 import Game from "../Logic/Game";
 import {addPointerEnter, addPointerLeave} from "./Raycaster";
 import Tile from "./Tile";
@@ -30,10 +30,6 @@ function Plane(props: {
     //das Objekt dem planeRef zugeordnet ist, wird im return angegeben
     //mit plane, ist die Ebene gemeint, die unter den Zellen ist (ich glaube sie ist magenta)
     const planeRef = useRef<Mesh>();
-    const planeRotation = new Euler(Math.PI / 2);
-    const planePosition = props.displayPos
-        .clone()
-        .add(new Vector3(1.5, -0.51, 1.5));
 
     //der code in useEffect wird ausgeführt, sobald die Funktion ein mal gelaufen ist
     //also kann man in useEffect auf planeRef.current zugreifen

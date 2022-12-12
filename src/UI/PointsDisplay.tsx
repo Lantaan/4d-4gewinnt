@@ -19,7 +19,8 @@ export default function PointsDisplay(props: { gameObject: Game }) {
                     zIndex: '2',
                     backgroundColor: 'transaprent',
                     userSelect: 'none',
-                    color: "red"
+                    color: "red",
+                    textShadow: "0 0 3px white"
                 }}>
                 red: {pointsP1}
             </div>
@@ -32,7 +33,8 @@ export default function PointsDisplay(props: { gameObject: Game }) {
                     zIndex: '2',
                     backgroundColor: 'transparent',
                     userSelect: 'none',
-                    color: "blue"
+                    color: "blue",
+                    textShadow: "0 0 3px white"
                 }}>
                 blue: {pointsP2}
             </div>
