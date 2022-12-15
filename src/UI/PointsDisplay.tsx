@@ -17,10 +17,10 @@ export default function PointsDisplay(props: { gameObject: Game }) {
                     left: '5vw',
                     fontSize: '50px',
                     zIndex: '2',
-                    backgroundColor: 'transaprent',
+                    backgroundColor: 'transparent',
                     userSelect: 'none',
                     color: "red",
-                    textShadow: "0 0 3px white"
+                    textShadow: "0 0 3px black"
                 }}>
                 red: {pointsP1}
             </div>
@@ -34,7 +34,7 @@ export default function PointsDisplay(props: { gameObject: Game }) {
                     backgroundColor: 'transparent',
                     userSelect: 'none',
                     color: "blue",
-                    textShadow: "0 0 3px white"
+                    textShadow: "0 0 3px black"
                 }}>
                 blue: {pointsP2}
             </div>

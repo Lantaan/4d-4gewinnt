@@ -29,6 +29,7 @@ const raycaster: Raycaster = new Raycaster(),
 const onPointerEnterFunctions = new Map<number, () => void>(),
     onPointerLeaveFunctions = new Map<number, () => void>(),
     onClickFunctions = new Map<number, (e: MouseEvent) => void>();
+const ignoreMeshIds = new Set<number>();
 
 //speichert die id des letzten meshes, das über dem die Maus war, als sie zuletzt bewegt wurde
 //bzw. ob die Maus über keinem mesh war (null)
@@ -47,7 +48,7 @@ function frame(camera: Camera, scene: Scene) {
     //.some ist wie .forEach, nur dass man es frühzeitig beenden kann, wenn man true returnt
     //also werden alle sachen die vom ray getroffen werden durchgegangen, bis man true return,
     //oder es keine weiteren intersect gibt
-    const object = intersects[0]?.object,
+    const object = intersects.filter(inter => !ignoreMeshIds.has(inter.object.id))[0]?.object,
         id = object?.id;
 
     let callbackForObjectExists: boolean = false;
@@ -130,4 +131,8 @@ function addMouseDown(objectId: number, callback: () => void) {
     onClickFunctions.set(objectId, callback);
 }
 
-export {CustomRaycaster, addPointerEnter, addPointerLeave, addMouseDown};
+function ignoreObj(objectId: number) {
+    ignoreMeshIds.add(objectId);
+}
+
+export {CustomRaycaster, addPointerEnter, addPointerLeave, addMouseDown, ignoreObj};

@@ -5,17 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8f2d0ef5-3345-4f6b-bb65-79b05c65c185" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/utils/consts.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/utils/gameToUICoordinates.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UI/HighlightTile.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/UI/highlightTileWithGamePos.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Logic/Game.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Logic/Game.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Box.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Box.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/CameraManager.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/CameraManager.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Plane.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Plane.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/PointsDisplay.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/PointsDisplay.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/UI/Raycaster.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Raycaster.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/UI/Tile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Tile.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/UI/Tower.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/UI/Tower.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,6 +20,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="TypeScript JSX File" />
         <option value="TypeScript File" />
       </list>
     </option>
@@ -49,18 +45,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "WebServerToolWindowFactoryState": "false",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "ts.external.directory.path": "C:\\Users\\andre\\4d-4gewinnt\\node_modules\\typescript\\lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\andre\\4d-4gewinnt\\node_modules\\typescript\\lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
@@ -76,7 +72,9 @@
       <workItem from="1670433074085" duration="440000" />
       <workItem from="1670593168974" duration="2209000" />
       <workItem from="1670611126395" duration="4394000" />
-      <workItem from="1670836535000" duration="2928000" />
+      <workItem from="1670836535000" duration="3151000" />
+      <workItem from="1671088166125" duration="2124000" />
+      <workItem from="1671094504314" duration="2952000" />
     </task>
     <servers />
   </component>
